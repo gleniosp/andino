@@ -1,0 +1,54 @@
+{
+  "name": "Andino",
+  "build": {
+    "context": "../",
+    "dockerfile": "../docker/Dockerfile",
+    "args": {
+      "USERID": "${localEnv:USER_UID:1000}",
+      "USER": "${localEnv:USER}"
+    },
+    "options": ["--ssh=default"]
+  },
+  "workspaceFolder": "/home/${localEnv:USER}/ws",
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/home/${localEnv:USER}/ws/src,type=bind",
+    "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind",
+    "source=${localEnv:HOME}/.ssh,target=/home/${localEnv:USER}/.ssh,type=bind"
+  ],
+  "runArgs": [
+    "--net=host",
+    "--hostname=${localEnv:HOSTNAME}",
+    "--name=ros2_humble_andino_container",
+    "--gpus=all",
+    "--runtime=nvidia"
+  ],
+  "containerEnv": {
+    "DISPLAY": "${localEnv:DISPLAY}",
+    "XDG_RUNTIME_DIR": "${localEnv:XDG_RUNTIME_DIR}",
+    "NVIDIA_DRIVER_CAPABILITIES": "all"
+  },
+  "postCreateCommand": "/bin/bash -c 'rosdep install --from-paths src --ignore-src -i -y && colcon build && source install/setup.bash'",
+  "shutdownAction": "stopContainer",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.cpptools-extension-pack",
+        "ms-python.python",
+        "ms-iot.vscode-ros",
+        "redhat.vscode-xml",
+        "redhat.vscode-yaml"
+      ],
+      "settings": {
+        "terminal.integrated.shell.linux": "/bin/bash"
+      }
+    }
+  }
+}
+
+// REMINDER
+// Please run xhost +local:docker on your host machine.
+
+// Add the following line to .bashrc:
+//  export USER_UID=$(id -u)
+//  export USER=$(whoami)
+//  export HOSTNAME=$(hostname)
