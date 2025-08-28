@@ -13,8 +13,7 @@
   "mounts": [
     "source=${localWorkspaceFolder},target=/home/${localEnv:USER}/ws/src,type=bind",
     "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind",
-    "source=${localEnv:HOME}/.ssh,target=/home/${localEnv:USER}/.ssh,type=bind",
-    "source=/tmp/${localEnv:WAYLAND_DISPLAY},target=/tmp/${localEnv:WAYLAND_DISPLAY},type=bind"
+    "source=${localEnv:HOME}/.ssh,target=/home/${localEnv:USER}/.ssh,type=bind"
   ],
   "runArgs": [
     "--net=host",
@@ -25,8 +24,6 @@
   ],
   "containerEnv": {
     "DISPLAY": "${localEnv:DISPLAY}",
-    "WAYLAND_DISPLAY": "${localEnv:WAYLAND_DISPLAY}",
-    "XDG_RUNTIME_DIR": "/tmp",
     "NVIDIA_DRIVER_CAPABILITIES": "all"
   },
   "postCreateCommand": "/bin/bash -c 'rosdep install --from-paths src --ignore-src -i -y && colcon build && source install/setup.bash'",
