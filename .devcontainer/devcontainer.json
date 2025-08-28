@@ -24,6 +24,8 @@
   ],
   "containerEnv": {
     "DISPLAY": "${localEnv:DISPLAY}",
+    "ROS_DOMAIN_ID": "0",
+    "ROS_LOCALHOST_ONLY": "0",
     "NVIDIA_DRIVER_CAPABILITIES": "all"
   },
   "postCreateCommand": "/bin/bash -c 'rosdep install --from-paths src --ignore-src -i -y && colcon build && source install/setup.bash'",
